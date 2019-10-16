@@ -1,5 +1,8 @@
 package com.mad.tankgame;
+
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -14,9 +17,9 @@ public class TankClient extends Frame{
 		g.setColor(Color.RED);
 		g.fillOval(x, y, 30, 30);
 		g.setColor(c);
-		
-		y += 5;
-		x += 5;
+
+//		y += 5;
+//		x += 5;
 	}
 	
 	@Override
@@ -48,6 +51,7 @@ public class TankClient extends Frame{
 		this.setBackground(Color.GREEN);
 		setVisible(true);
 		new Thread(new TankThread()).start();
+		addKeyListener(new TankKeyListener());
 	}
 	
 	public static void main(String[] args) {
@@ -74,5 +78,29 @@ public class TankClient extends Frame{
 		}
 		
 	}
+	
+	private class TankKeyListener extends KeyAdapter{
 
+		@Override
+		public void keyPressed(KeyEvent e) {
+//			super.keyPressed(e);
+			System.out.println("Pressed");
+			int key = e.getKeyCode();
+			switch (key){
+				case KeyEvent.VK_RIGHT:
+					x += 5;
+					break;
+				case KeyEvent.VK_DOWN:
+					y += 5;
+					break;
+				case KeyEvent.VK_LEFT:
+					x -= 5;
+					break;
+				case KeyEvent.VK_UP:
+					y -= 5;
+					break;
+			}
+		}
+		
+	}
 }
