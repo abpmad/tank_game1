@@ -7,19 +7,20 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class TankClient extends Frame{
-	int x = 50, y = 50;
 	public static final int GAME_WIDTH = 800;
 	public static final int GAME_HEIGHT = 600;
-	Image offScreenImage = null;
 	
+	Image offScreenImage;
+	Tank myTank;
+	
+	public TankClient(){
+		offScreenImage = null;
+		myTank = new Tank(50,50);
+	}
+	
+	@Override
 	public void paint(Graphics g) {
-		Color c = g.getColor();
-		g.setColor(Color.RED);
-		g.fillOval(x, y, 30, 30);
-		g.setColor(c);
-
-//		y += 5;
-//		x += 5;
+		myTank.draw(g);
 	}
 	
 	@Override
@@ -43,6 +44,7 @@ public class TankClient extends Frame{
 		this.setSize(GAME_WIDTH , GAME_HEIGHT);
 		this.setTitle("TankWar");
 		this.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);
 			}
@@ -61,16 +63,13 @@ public class TankClient extends Frame{
 	}
 	
 	private class TankThread implements Runnable{
-
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
 			while(true){
 				repaint();
 				try {
 					Thread.sleep(50);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -78,29 +77,13 @@ public class TankClient extends Frame{
 		}
 		
 	}
-	
 	private class TankKeyListener extends KeyAdapter{
-
 		@Override
 		public void keyPressed(KeyEvent e) {
-//			super.keyPressed(e);
-			System.out.println("Pressed");
-			int key = e.getKeyCode();
-			switch (key){
-				case KeyEvent.VK_RIGHT:
-					x += 5;
-					break;
-				case KeyEvent.VK_DOWN:
-					y += 5;
-					break;
-				case KeyEvent.VK_LEFT:
-					x -= 5;
-					break;
-				case KeyEvent.VK_UP:
-					y -= 5;
-					break;
-			}
+			myTank.keyPressed(e);
+			
 		}
 		
 	}
+	
 }
