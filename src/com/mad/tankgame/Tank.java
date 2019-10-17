@@ -8,7 +8,7 @@ public class Tank {
 	private int x, y;
 	private static final int XSPEED = 5;
 	private static final int YSPEED = 5;
-	private enum Direction{ L, LU, U, RU, R, RD, D, LD, STOP };
+	public enum Direction{ L, LU, U, RU, R, RD, D, LD, STOP };
 	private Direction direction;
 	private boolean bL, bU, bR, bD;
 	
@@ -54,8 +54,14 @@ public class Tank {
 				break;
 			case STOP:
 				break;
+			default:
+				break;
 			
 		}
+	}
+	
+	public Direction getDirection(){
+		return direction;
 	}
 	public void draw(Graphics g) {
 		Color c = g.getColor();

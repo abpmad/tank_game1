@@ -12,15 +12,18 @@ public class TankClient extends Frame{
 	
 	Image offScreenImage;
 	Tank myTank;
+	Missile myMissle;
 	
 	public TankClient(){
 		offScreenImage = null;
 		myTank = new Tank(50,50);
+		myMissle = new Missile(50, 50, Tank.Direction.STOP);
 	}
 	
 	@Override
 	public void paint(Graphics g) {
 		myTank.draw(g);
+		myMissle.draw(g);
 	}
 	
 	@Override
@@ -86,7 +89,7 @@ public class TankClient extends Frame{
 		@Override
 		public void keyPressed(KeyEvent e) {
 			myTank.keyPressed(e);
-			
+			myMissle.keyPressed(e, myTank.getDirection());
 		}
 		
 	}
