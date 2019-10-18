@@ -14,12 +14,13 @@ public class Tank {
 	private TankClient tc;
 	
 	public enum Direction{ L, LU, U, RU, R, RD, D, LD, STOP };
-	private Direction direction;
+	private Direction direction, gunDir;
 	
 	public Tank(int x, int y) {
 		this.x = x;
 		this.y = y;
 		direction = Direction.STOP;
+		gunDir = Direction.D;
 		bL = false;
 		bU = false;
 		bR = false;
@@ -65,18 +66,45 @@ public class Tank {
 				break;
 			default:
 				break;
-			
 		}
+		if( direction != Direction.STOP)
+			gunDir = direction;
 	}
 	
-	public Direction getDirection(){
-		return direction;
-	}
 	public void draw(Graphics g) {
 		Color c = g.getColor();
 		g.setColor(Color.RED);
 		g.fillOval(x, y, WIDTH, HEIGHT);
 		g.setColor(c);
+		switch(gunDir){
+			case L:
+				g.drawLine( x + WIDTH/2, y+HEIGHT/2, x, y + HEIGHT/2);
+				break;
+			case LU:
+				g.drawLine( x + WIDTH/2, y+HEIGHT/2, x, y );
+				break;
+			case U:
+				g.drawLine( x + WIDTH/2, y+HEIGHT/2, x + WIDTH/2, y);
+				break;
+			case RU:
+				g.drawLine( x + WIDTH/2, y+HEIGHT/2, x + WIDTH, y );
+				break;
+			case R:
+				g.drawLine( x + WIDTH/2, y+HEIGHT/2, x + WIDTH, y + HEIGHT/2);
+				break;
+			case RD:
+				g.drawLine( x + WIDTH/2, y+HEIGHT/2, x + WIDTH, y + HEIGHT);
+				break;
+			case D:
+				g.drawLine( x + WIDTH/2, y+HEIGHT/2, x + WIDTH/2, y + HEIGHT);
+				break;
+			case LD:
+				g.drawLine( x + WIDTH/2, y+HEIGHT/2, x, y + HEIGHT);
+				break;
+			default:
+				break;
+			
+		}
 		move();
 	} 
 
@@ -112,7 +140,6 @@ public class Tank {
 				break;
 		}
 		locateDirection();
-		
 	}
 
 	public void keyReleased(KeyEvent e) {
@@ -137,6 +164,6 @@ public class Tank {
 	public Missile fire(){
 		int mX = x + WIDTH / 2 - Missile.WIDTH / 2;
 		int mY = y + HEIGHT / 2 - Missile.HEIGHT / 2;
-		return new Missile(mX,mY,direction);
+		return new Missile(mX,mY,gunDir);
 	}
 }
