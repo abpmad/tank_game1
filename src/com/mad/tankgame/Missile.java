@@ -16,7 +16,7 @@ public class Missile {
 	private boolean isLive;
 	private TankClient tc;
 	private Tank.Direction dir;
-	private boolean bL, bU, bR, bD;
+//	private boolean bL, bU, bR, bD;
 	
 	public Missile(int x, int y, Direction dir) {
 		this.x = x;
@@ -24,10 +24,10 @@ public class Missile {
 		this.isLive = true;
 		tc = null;
 		this.dir = dir;
-		bL = false;
-		bU = false;
-		bR = false;
-		bD = false; 
+//		bL = false;
+//		bU = false;
+//		bR = false;
+//		bD = false; 
 	}
 	public Missile(int x, int y, Direction dir, TankClient tc) {
 		this(x, y, dir);

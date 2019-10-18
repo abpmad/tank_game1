@@ -69,6 +69,10 @@ public class Tank {
 		}
 		if( direction != Direction.STOP)
 			gunDir = direction;
+		if( x < 0 ) x = 0;
+		if( y < 20 ) y = 20;
+		if( x + WIDTH > TankClient.GAME_WIDTH ) x = TankClient.GAME_WIDTH - WIDTH;
+		if( y + HEIGHT > TankClient.GAME_HEIGHT ) y = TankClient.GAME_HEIGHT - HEIGHT;
 	}
 	
 	public void draw(Graphics g) {
