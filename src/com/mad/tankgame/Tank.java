@@ -5,12 +5,16 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 
 public class Tank {
-	private int x, y;
+	private static final int WIDTH = 30;
+	private static final int HEIGHT = 30;
 	private static final int XSPEED = 5;
 	private static final int YSPEED = 5;
+	private int x, y;
+	private boolean bL, bU, bR, bD;
+	private TankClient tc;
+	
 	public enum Direction{ L, LU, U, RU, R, RD, D, LD, STOP };
 	private Direction direction;
-	private boolean bL, bU, bR, bD;
 	
 	public Tank(int x, int y) {
 		this.x = x;
@@ -20,8 +24,13 @@ public class Tank {
 		bU = false;
 		bR = false;
 		bD = false; 
+		tc = null;
 	}
 	
+	public Tank( int x, int y, TankClient tc ){
+		this(x, y);
+		this.tc = tc;
+	}
 	public void move(){
 		switch(direction){
 			case L:
@@ -66,7 +75,7 @@ public class Tank {
 	public void draw(Graphics g) {
 		Color c = g.getColor();
 		g.setColor(Color.RED);
-		g.fillOval(x, y, 30, 30);
+		g.fillOval(x, y, WIDTH, HEIGHT);
 		g.setColor(c);
 		move();
 	} 
@@ -86,6 +95,9 @@ public class Tank {
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
 		switch (key){
+			case KeyEvent.VK_SPACE:
+				tc.myMissle = fire();
+				break;
 			case KeyEvent.VK_RIGHT:
 				bR = true;
 				break;
@@ -122,4 +134,9 @@ public class Tank {
 		locateDirection();
 	}
 	
+	public Missile fire(){
+		int mX = x + WIDTH / 2 - Missile.WIDTH / 2;
+		int mY = y + HEIGHT / 2 - Missile.HEIGHT / 2;
+		return new Missile(mX,mY,direction);
+	}
 }

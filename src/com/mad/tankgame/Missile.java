@@ -10,6 +10,8 @@ import com.mad.tankgame.Tank.Direction;
 public class Missile {
 	private static final int XSPEED = 10;
 	private static final int YSPEED = 10;
+	public static final int WIDTH = 10;
+	public static final int HEIGHT = 10;
 	private int x, y;
 	private Tank.Direction dir;
 	private boolean bL, bU, bR, bD;
@@ -65,35 +67,4 @@ public class Missile {
 			break;
 		}
 	}
-	public void keyPressed(KeyEvent e, Tank.Direction dir) {
-		int key = e.getKeyCode();
-		switch (key){
-			case KeyEvent.VK_CONTROL:
-				this.dir = dir;
-				break;
-//			case KeyEvent.VK_DOWN:
-//				bD = true;
-//				break;
-//			case KeyEvent.VK_LEFT:
-//				bL = true;
-//				break;
-//			case KeyEvent.VK_UP:
-//				bU = true;
-//				break;
-			default:
-				break;
-		}
-//		locateDirection();
-	}
-//	public void locateDirection(){
-//		if( bR && !bD && !bL && !bU ) dir = Direction.R;
-//		else if( bR && bD && !bL && !bU ) dir = Direction.RD;
-//		else if( bR && !bD && !bL && bU ) dir = Direction.RU;
-//		else if( !bR && bD && !bL && !bU ) dir = Direction.D;
-//		else if( !bR && bD && bL && !bU ) dir = Direction.LD;
-//		else if( !bR && !bD && bL && !bU ) dir = Direction.L;
-//		else if( !bR && !bD && bL && bU ) dir = Direction.LU;
-//		else if( !bR && !bD && !bL && bU ) dir = Direction.U;
-//		else if( !bR && !bD && !bL && !bU ) dir = Direction.STOP;
-//	}
 }

@@ -10,20 +10,22 @@ public class TankClient extends Frame{
 	public static final int GAME_WIDTH = 800;
 	public static final int GAME_HEIGHT = 600;
 	
-	Image offScreenImage;
-	Tank myTank;
-	Missile myMissle;
+	private Image offScreenImage;
+	private Tank myTank;
+	public Missile myMissle;
 	
 	public TankClient(){
 		offScreenImage = null;
-		myTank = new Tank(50,50);
-		myMissle = new Missile(50, 50, Tank.Direction.STOP);
+		myTank = new Tank(50,50, this);
+		myMissle = null;
 	}
 	
 	@Override
 	public void paint(Graphics g) {
 		myTank.draw(g);
-		myMissle.draw(g);
+		if( myMissle != null ) myMissle.draw(g);
+		
+		
 	}
 	
 	@Override
@@ -89,7 +91,6 @@ public class TankClient extends Frame{
 		@Override
 		public void keyPressed(KeyEvent e) {
 			myTank.keyPressed(e);
-			myMissle.keyPressed(e, myTank.getDirection());
 		}
 		
 	}
