@@ -123,9 +123,6 @@ public class Tank {
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
 		switch (key){
-			case KeyEvent.VK_SPACE:
-				tc.myMissle = fire();
-				break;
 			case KeyEvent.VK_RIGHT:
 				bR = true;
 				break;
@@ -145,6 +142,9 @@ public class Tank {
 	public void keyReleased(KeyEvent e) {
 		int key = e.getKeyCode();
 		switch (key){
+			case KeyEvent.VK_SPACE:
+				fire();
+				break;
 			case KeyEvent.VK_RIGHT:
 				bR = false;
 				break;
@@ -161,9 +161,9 @@ public class Tank {
 		locateDirection();
 	}
 	
-	public Missile fire(){
+	public void fire(){
 		int mX = x + WIDTH / 2 - Missile.WIDTH / 2;
 		int mY = y + HEIGHT / 2 - Missile.HEIGHT / 2;
-		return new Missile(mX,mY,gunDir);
+		tc.addMissile(new Missile(mX,mY,gunDir, tc));
 	}
 }

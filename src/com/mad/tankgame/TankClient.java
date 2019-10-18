@@ -1,5 +1,7 @@
 package com.mad.tankgame;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -12,20 +14,27 @@ public class TankClient extends Frame{
 	
 	private Image offScreenImage;
 	private Tank myTank;
-	public Missile myMissle;
+	private List<Missile> missiles;
 	
 	public TankClient(){
 		offScreenImage = null;
 		myTank = new Tank(50,50, this);
-		myMissle = null;
+		missiles = new ArrayList<>();
 	}
 	
+	public void addMissile(Missile m){
+		missiles.add(m);
+	}
+	
+	public List<Missile> getMissiles(){
+		return missiles;
+	}
 	@Override
 	public void paint(Graphics g) {
+		g.drawString("missile count = " + missiles.size(), 10, 50);
 		myTank.draw(g);
-		if( myMissle != null ) myMissle.draw(g);
-		
-		
+		for( int i = 0; i < missiles.size(); i++ )
+			missiles.get(i).draw(g);
 	}
 	
 	@Override

@@ -13,17 +13,25 @@ public class Missile {
 	public static final int WIDTH = 10;
 	public static final int HEIGHT = 10;
 	private int x, y;
+	private boolean isLive;
+	private TankClient tc;
 	private Tank.Direction dir;
 	private boolean bL, bU, bR, bD;
 	
 	public Missile(int x, int y, Direction dir) {
 		this.x = x;
 		this.y = y;
+		this.isLive = true;
+		tc = null;
 		this.dir = dir;
 		bL = false;
 		bU = false;
 		bR = false;
 		bD = false; 
+	}
+	public Missile(int x, int y, Direction dir, TankClient tc) {
+		this(x, y, dir);
+		this.tc = tc;
 	}
 	public void draw(Graphics g) {
 		Color c = g.getColor();
@@ -65,6 +73,11 @@ public class Missile {
 				break;
 		default:
 			break;
+		}
+		
+		if( x < 0 || y < 0 || x > TankClient.GAME_WIDTH || y > TankClient.GAME_HEIGHT ){
+			isLive = false;
+			tc.getMissiles().remove(this);
 		}
 	}
 }
