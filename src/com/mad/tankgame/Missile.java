@@ -2,10 +2,8 @@ package com.mad.tankgame;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-
-import com.mad.tankgame.Tank.Direction;
-
 
 public class Missile {
 	private static final int XSPEED = 10;
@@ -13,27 +11,34 @@ public class Missile {
 	public static final int WIDTH = 10;
 	public static final int HEIGHT = 10;
 	private int x, y;
-	private boolean isLive;
+	private boolean aLive;
 	private TankClient tc;
 	private Tank.Direction dir;
-//	private boolean bL, bU, bR, bD;
 	
-	public Missile(int x, int y, Direction dir) {
+	public Missile(int x, int y, Tank.Direction dir) {
 		this.x = x;
 		this.y = y;
-		this.isLive = true;
+		this.aLive = true;
 		tc = null;
 		this.dir = dir;
-//		bL = false;
-//		bU = false;
-//		bR = false;
-//		bD = false; 
 	}
-	public Missile(int x, int y, Direction dir, TankClient tc) {
+	public Missile(int x, int y, Tank.Direction dir, TankClient tc) {
 		this(x, y, dir);
 		this.tc = tc;
 	}
+	
+	public boolean isAlive() {
+		return aLive;
+	}
+
+	public void setAlive(boolean aLive) {
+		this.aLive = aLive;
+	}
 	public void draw(Graphics g) {
+		if(!aLive){
+			tc.getMissiles().remove(this);
+			return;
+		}
 		Color c = g.getColor();
 		g.setColor(Color.BLACK);
 		g.fillOval(x, y, 10, 10);
@@ -75,9 +80,20 @@ public class Missile {
 			break;
 		}
 		
-		if( x < 0 || y < 0 || x > TankClient.GAME_WIDTH || y > TankClient.GAME_HEIGHT ){
-			isLive = false;
-			tc.getMissiles().remove(this);
+		if( x < 0 || y < 0 || x > TankClient.GAME_WIDTH || y > TankClient.GAME_HEIGHT )
+			aLive = false;
+	}
+	
+	public Rectangle getRectangle(){
+		return new Rectangle(x, y, WIDTH, HEIGHT);
+	}
+	
+	public boolean hitTank(Tank t){
+		if( t.isAlive() && this.getRectangle().intersects(t.getRectangle())){
+			t.setAlive(false);
+			this.setAlive(false);
+			return true;
 		}
+		return false;
 	}
 }

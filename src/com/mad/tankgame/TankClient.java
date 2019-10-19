@@ -14,11 +14,13 @@ public class TankClient extends Frame{
 	
 	private Image offScreenImage;
 	private Tank myTank;
+	private Tank enemyTank;
 	private List<Missile> missiles;
 	
 	public TankClient(){
 		offScreenImage = null;
-		myTank = new Tank(50,50, this);
+		myTank = new Tank(50,50,true, this);
+		enemyTank = new Tank(150,150,false, this);
 		missiles = new ArrayList<>();
 	}
 	
@@ -32,9 +34,16 @@ public class TankClient extends Frame{
 	@Override
 	public void paint(Graphics g) {
 		g.drawString("missile count = " + missiles.size(), 10, 50);
+
+		for( int i = 0; i < missiles.size(); i++ ){
+			Missile curMissile = missiles.get(i);
+			curMissile.hitTank(enemyTank);
+			curMissile.draw(g);
+		}
+		
 		myTank.draw(g);
-		for( int i = 0; i < missiles.size(); i++ )
-			missiles.get(i).draw(g);
+		enemyTank.draw(g);
+			
 	}
 	
 	@Override

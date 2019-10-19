@@ -1,8 +1,10 @@
 package com.mad.tankgame;
 
 import java.awt.Color;
+import java.awt.Rectangle;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+
 
 public class Tank {
 	private static final int WIDTH = 30;
@@ -10,15 +12,19 @@ public class Tank {
 	private static final int XSPEED = 5;
 	private static final int YSPEED = 5;
 	private int x, y;
+	private boolean good, aLive;
+	
 	private boolean bL, bU, bR, bD;
 	private TankClient tc;
 	
 	public enum Direction{ L, LU, U, RU, R, RD, D, LD, STOP };
 	private Direction direction, gunDir;
 	
-	public Tank(int x, int y) {
+	public Tank(int x, int y, boolean good) {
 		this.x = x;
 		this.y = y;
+		this.good = good;
+		aLive = true;
 		direction = Direction.STOP;
 		gunDir = Direction.D;
 		bL = false;
@@ -28,10 +34,19 @@ public class Tank {
 		tc = null;
 	}
 	
-	public Tank( int x, int y, TankClient tc ){
-		this(x, y);
+	public Tank( int x, int y, boolean good, TankClient tc ){
+		this(x, y, good);
 		this.tc = tc;
 	}
+	
+	public boolean isAlive() {
+		return aLive;
+	}
+
+	public void setAlive(boolean aLive) {
+		this.aLive = aLive;
+	}
+	
 	public void move(){
 		switch(direction){
 			case L:
@@ -76,8 +91,10 @@ public class Tank {
 	}
 	
 	public void draw(Graphics g) {
+		if(!aLive)return;
 		Color c = g.getColor();
-		g.setColor(Color.RED);
+		if( good ) g.setColor(Color.RED);
+		else g.setColor(Color.BLUE);
 		g.fillOval(x, y, WIDTH, HEIGHT);
 		g.setColor(c);
 		switch(gunDir){
@@ -169,5 +186,9 @@ public class Tank {
 		int mX = x + WIDTH / 2 - Missile.WIDTH / 2;
 		int mY = y + HEIGHT / 2 - Missile.HEIGHT / 2;
 		tc.addMissile(new Missile(mX,mY,gunDir, tc));
+	}
+	
+	public Rectangle getRectangle(){
+		return new Rectangle(x, y, WIDTH, HEIGHT);
 	}
 }
