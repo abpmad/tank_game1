@@ -107,4 +107,11 @@ public class Missile {
 		}
 		return false;
 	}
+	public boolean hitWall(Wall wall) {
+		if( this.isAlive() && this.getRectangle().intersects(wall.getRectangle())){
+			this.setAlive(false);
+			return true;
+		}
+		return false;
+	}
 }

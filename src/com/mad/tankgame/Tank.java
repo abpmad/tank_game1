@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.Random;
+import java.util.List;
 
 
 public class Tank {
@@ -12,7 +13,7 @@ public class Tank {
 	private static final int HEIGHT = 30;
 	private static final int XSPEED = 5;
 	private static final int YSPEED = 5;
-	private int x, y;
+	private int x, y, oldX, oldY;
 	private boolean good, aLive;
 	
 	private boolean bL, bU, bR, bD;
@@ -26,6 +27,8 @@ public class Tank {
 	public Tank(int x, int y, boolean good) {
 		this.x = x;
 		this.y = y;
+		this.oldX = x;
+		this.oldY = y;
 		this.good = good;
 		aLive = true;
 		direction = Direction.STOP;
@@ -54,6 +57,8 @@ public class Tank {
 	}
 	
 	public void move(){
+		oldX = x;
+		oldY = y;
 		switch(direction){
 			case L:
 				x -= XSPEED;
@@ -186,6 +191,9 @@ public class Tank {
 			case KeyEvent.VK_SPACE:
 				fire();
 				break;
+			case KeyEvent.VK_X:
+				superFire();
+				break;
 			case KeyEvent.VK_RIGHT:
 				bR = false;
 				break;
@@ -203,11 +211,26 @@ public class Tank {
 	}
 	
 	public void fire(){
+		if( !aLive ) return;
 		int mX = x + WIDTH / 2 - Missile.WIDTH / 2;
 		int mY = y + HEIGHT / 2 - Missile.HEIGHT / 2;
 		tc.addMissile(new Missile(mX,mY,gunDir, good, tc));
 	}
 	
+	public void fire(Direction d){
+		if( !aLive ) return;
+		int mX = x + WIDTH / 2 - Missile.WIDTH / 2;
+		int mY = y + HEIGHT / 2 - Missile.HEIGHT / 2;
+		tc.addMissile(new Missile(mX,mY,d, good, tc));
+	}
+	
+	public void superFire(){
+		Direction[] dirs = Direction.values();
+		
+		for( int i = 0; i < dirs.length - 1; i++ ){
+			fire(dirs[i]);
+		}
+	}
 	public boolean isGood() {
 		return good;
 	}
@@ -218,5 +241,28 @@ public class Tank {
 
 	public Rectangle getRectangle(){
 		return new Rectangle(x, y, WIDTH, HEIGHT);
+	}
+	public void stay(){
+		x = oldX;
+		y = oldY;
+	}
+	public boolean colldieWithWall(Wall wall ){
+		if( this.isAlive() && this.getRectangle().intersects(wall.getRectangle())){
+			stay();
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean colldieWithTanks( List<Tank> tanks ){
+		for( int i = 0; i < tanks.size(); i++ ){
+			Tank t = tanks.get(i);
+			if( this != t && this.isAlive() && t.isAlive() && this.getRectangle().intersects(t.getRectangle())){
+				this.stay();
+				t.stay();
+				return true;
+			}
+		}
+		return false;
 	}
 }

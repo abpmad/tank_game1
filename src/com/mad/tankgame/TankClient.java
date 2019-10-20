@@ -17,6 +17,7 @@ public class TankClient extends Frame{
 	private List<Tank> enemyTanks;
 	private List<Missile> missiles;
 	private List<Explode> explodes;
+	private Wall wall;
 	
 	public TankClient(){
 		offScreenImage = null;
@@ -28,6 +29,7 @@ public class TankClient extends Frame{
 		for( int i = 0; i < 10; i++ ){
 			enemyTanks.add(new Tank(50,100 + 40 * i, false, Tank.Direction.STOP, this));
 		}
+		wall = new Wall(300, 200, 20, 150, this);
 	}
 	
 	public void addMissile(Missile m){
@@ -58,6 +60,8 @@ public class TankClient extends Frame{
 		for( int i = 0; i < missiles.size(); i++ ){
 			Missile curMissile = missiles.get(i);
 			curMissile.hitTanks(enemyTanks);
+			curMissile.hitTank(myTank);
+			curMissile.hitWall(wall);
 			curMissile.draw(g);
 		}
 		
@@ -65,11 +69,15 @@ public class TankClient extends Frame{
 			Explode curExplode = explodes.get(i);
 			curExplode.draw(g);
 		}
-		myTank.draw(g);
+		
 		for( int i = 0; i < enemyTanks.size(); i++) {
 			Tank enemyTank = enemyTanks.get(i);
 			enemyTank.draw(g);
+			enemyTank.colldieWithWall(wall);
+			enemyTank.colldieWithTanks(enemyTanks);
 		}
+		wall.draw(g);
+		myTank.draw(g);
 	}
 	
 	@Override
