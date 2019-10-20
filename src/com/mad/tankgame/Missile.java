@@ -92,6 +92,7 @@ public class Missile {
 		if( t.isAlive() && this.getRectangle().intersects(t.getRectangle())){
 			t.setAlive(false);
 			this.setAlive(false);
+			tc.addExplode(new Explode(x, y, tc));
 			return true;
 		}
 		return false;

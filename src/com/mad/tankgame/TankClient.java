@@ -16,12 +16,15 @@ public class TankClient extends Frame{
 	private Tank myTank;
 	private Tank enemyTank;
 	private List<Missile> missiles;
+	private List<Explode> explodes;
 	
 	public TankClient(){
 		offScreenImage = null;
 		myTank = new Tank(50,50,true, this);
 		enemyTank = new Tank(150,150,false, this);
 		missiles = new ArrayList<>();
+		
+		explodes = new ArrayList<>();
 	}
 	
 	public void addMissile(Missile m){
@@ -31,19 +34,30 @@ public class TankClient extends Frame{
 	public List<Missile> getMissiles(){
 		return missiles;
 	}
+	
+	public void addExplode(Explode e){
+		explodes.add(e);
+	}
+	
+	public List<Explode> getExplode(){
+		return explodes;
+	}
 	@Override
 	public void paint(Graphics g) {
-		g.drawString("missile count = " + missiles.size(), 10, 50);
-
+		g.drawString("missiles count = " + missiles.size(), 10, 50);
+		g.drawString("explodes count = " + explodes.size(), 10, 70);
 		for( int i = 0; i < missiles.size(); i++ ){
 			Missile curMissile = missiles.get(i);
 			curMissile.hitTank(enemyTank);
 			curMissile.draw(g);
 		}
 		
+		for( int i = 0; i < explodes.size(); i++ ){
+			Explode curExplode = explodes.get(i);
+			curExplode.draw(g);
+		}
 		myTank.draw(g);
 		enemyTank.draw(g);
-			
 	}
 	
 	@Override
