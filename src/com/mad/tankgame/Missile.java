@@ -1,9 +1,9 @@
 package com.mad.tankgame;
 
+import java.util.List;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
 
 public class Missile {
 	private static final int XSPEED = 10;
@@ -14,6 +14,7 @@ public class Missile {
 	private boolean aLive;
 	private TankClient tc;
 	private Tank.Direction dir;
+	private boolean good;
 	
 	public Missile(int x, int y, Tank.Direction dir) {
 		this.x = x;
@@ -22,8 +23,9 @@ public class Missile {
 		tc = null;
 		this.dir = dir;
 	}
-	public Missile(int x, int y, Tank.Direction dir, TankClient tc) {
+	public Missile(int x, int y, Tank.Direction dir, boolean good, TankClient tc) {
 		this(x, y, dir);
+		this.good = good;
 		this.tc = tc;
 	}
 	
@@ -89,11 +91,19 @@ public class Missile {
 	}
 	
 	public boolean hitTank(Tank t){
-		if( t.isAlive() && this.getRectangle().intersects(t.getRectangle())){
+		if( this.isAlive() && t.isAlive() && 
+		   this.getRectangle().intersects(t.getRectangle()) && this.good != t.isGood()){
 			t.setAlive(false);
 			this.setAlive(false);
 			tc.addExplode(new Explode(x, y, tc));
 			return true;
+		}
+		return false;
+	}
+	
+	public boolean hitTanks(List<Tank> tanks){
+		for( int i = 0; i < tanks.size(); i++){
+			if( hitTank(tanks.get(i)))return true;
 		}
 		return false;
 	}

@@ -29,7 +29,7 @@ public class Explode {
 		if( step == diameter.length ){
 			aLive = false;
 			step = 0;
-			tc.getExplode().remove(this);
+			tc.getExplodes().remove(this);
 			return;
 		}
 		Color c = g.getColor();

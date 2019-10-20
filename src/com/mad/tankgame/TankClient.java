@@ -14,17 +14,20 @@ public class TankClient extends Frame{
 	
 	private Image offScreenImage;
 	private Tank myTank;
-	private Tank enemyTank;
+	private List<Tank> enemyTanks;
 	private List<Missile> missiles;
 	private List<Explode> explodes;
 	
 	public TankClient(){
 		offScreenImage = null;
-		myTank = new Tank(50,50,true, this);
-		enemyTank = new Tank(150,150,false, this);
+		myTank = new Tank(50,50,true, Tank.Direction.STOP, this);
+		enemyTanks = new ArrayList<>();
 		missiles = new ArrayList<>();
-		
 		explodes = new ArrayList<>();
+		
+		for( int i = 0; i < 10; i++ ){
+			enemyTanks.add(new Tank(50,100 + 40 * i, false, Tank.Direction.STOP, this));
+		}
 	}
 	
 	public void addMissile(Missile m){
@@ -39,16 +42,22 @@ public class TankClient extends Frame{
 		explodes.add(e);
 	}
 	
-	public List<Explode> getExplode(){
+	public List<Explode> getExplodes(){
 		return explodes;
+	}
+	
+	public List<Tank> getEnemyTanks(){
+		return enemyTanks;
 	}
 	@Override
 	public void paint(Graphics g) {
 		g.drawString("missiles count = " + missiles.size(), 10, 50);
 		g.drawString("explodes count = " + explodes.size(), 10, 70);
+		g.drawString("enemyTanks count = " + enemyTanks.size(), 10, 90);
+		
 		for( int i = 0; i < missiles.size(); i++ ){
 			Missile curMissile = missiles.get(i);
-			curMissile.hitTank(enemyTank);
+			curMissile.hitTanks(enemyTanks);
 			curMissile.draw(g);
 		}
 		
@@ -57,7 +66,10 @@ public class TankClient extends Frame{
 			curExplode.draw(g);
 		}
 		myTank.draw(g);
-		enemyTank.draw(g);
+		for( int i = 0; i < enemyTanks.size(); i++) {
+			Tank enemyTank = enemyTanks.get(i);
+			enemyTank.draw(g);
+		}
 	}
 	
 	@Override

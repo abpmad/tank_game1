@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import java.util.Random;
 
 
 public class Tank {
@@ -19,6 +20,8 @@ public class Tank {
 	
 	public enum Direction{ L, LU, U, RU, R, RD, D, LD, STOP };
 	private Direction direction, gunDir;
+	private static Random rand;
+	private int step;
 	
 	public Tank(int x, int y, boolean good) {
 		this.x = x;
@@ -32,10 +35,13 @@ public class Tank {
 		bR = false;
 		bD = false; 
 		tc = null;
+		rand = new Random();
+		step = rand.nextInt(12) + 3;
 	}
 	
-	public Tank( int x, int y, boolean good, TankClient tc ){
+	public Tank( int x, int y, boolean good, Direction dir, TankClient tc ){
 		this(x, y, good);
+		this.direction = dir;
 		this.tc = tc;
 	}
 	
@@ -88,10 +94,24 @@ public class Tank {
 		if( y < 20 ) y = 20;
 		if( x + WIDTH > TankClient.GAME_WIDTH ) x = TankClient.GAME_WIDTH - WIDTH;
 		if( y + HEIGHT > TankClient.GAME_HEIGHT ) y = TankClient.GAME_HEIGHT - HEIGHT;
+		
+		if( !good ){
+			Direction[] dirs = Direction.values();
+			if(step == 0 ){
+				step = rand.nextInt(12) + 3;
+				direction = dirs[rand.nextInt(dirs.length)];
+			}
+			if( rand.nextInt(40) > 37 ) fire();
+			step--;
+		}
 	}
 	
 	public void draw(Graphics g) {
-		if(!aLive)return;
+		if(!aLive){
+			if(!good)
+				tc.getEnemyTanks().remove(this);
+			return;
+		}
 		Color c = g.getColor();
 		if( good ) g.setColor(Color.RED);
 		else g.setColor(Color.BLUE);
@@ -185,9 +205,17 @@ public class Tank {
 	public void fire(){
 		int mX = x + WIDTH / 2 - Missile.WIDTH / 2;
 		int mY = y + HEIGHT / 2 - Missile.HEIGHT / 2;
-		tc.addMissile(new Missile(mX,mY,gunDir, tc));
+		tc.addMissile(new Missile(mX,mY,gunDir, good, tc));
 	}
 	
+	public boolean isGood() {
+		return good;
+	}
+
+	public void setGood(boolean good) {
+		this.good = good;
+	}
+
 	public Rectangle getRectangle(){
 		return new Rectangle(x, y, WIDTH, HEIGHT);
 	}
