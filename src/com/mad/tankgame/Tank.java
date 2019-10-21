@@ -13,7 +13,7 @@ public class Tank {
 	private static final int HEIGHT = 30;
 	private static final int XSPEED = 5;
 	private static final int YSPEED = 5;
-	private int x, y, oldX, oldY;
+	private int x, y, oldX, oldY, life;
 	private boolean good, aLive;
 	
 	private boolean bL, bU, bR, bD;
@@ -23,6 +23,7 @@ public class Tank {
 	private Direction direction, gunDir;
 	private static Random rand;
 	private int step;
+	private BloodBar bb;
 	
 	public Tank(int x, int y, boolean good) {
 		this.x = x;
@@ -40,6 +41,8 @@ public class Tank {
 		tc = null;
 		rand = new Random();
 		step = rand.nextInt(12) + 3;
+		life = 100;
+		bb = new BloodBar();
 	}
 	
 	public Tank( int x, int y, boolean good, Direction dir, TankClient tc ){
@@ -54,6 +57,14 @@ public class Tank {
 
 	public void setAlive(boolean aLive) {
 		this.aLive = aLive;
+	}
+	
+	public int getLife() {
+		return life;
+	}
+
+	public void setLife(int life) {
+		this.life = life;
 	}
 	
 	public void move(){
@@ -118,10 +129,14 @@ public class Tank {
 			return;
 		}
 		Color c = g.getColor();
-		if( good ) g.setColor(Color.RED);
+		if( good ) {
+			g.setColor(Color.RED);
+			bb.draw(g);
+		}
 		else g.setColor(Color.BLUE);
 		g.fillOval(x, y, WIDTH, HEIGHT);
 		g.setColor(c);
+		
 		switch(gunDir){
 			case L:
 				g.drawLine( x + WIDTH/2, y+HEIGHT/2, x, y + HEIGHT/2);
@@ -180,6 +195,12 @@ public class Tank {
 				break;
 			case KeyEvent.VK_UP:
 				bU = true;
+				break;
+			case KeyEvent.VK_F2:
+				if( good && !aLive ){
+					aLive = true;
+					life = 100;
+				}
 				break;
 		}
 		locateDirection();
@@ -264,5 +285,24 @@ public class Tank {
 			}
 		}
 		return false;
+	}
+	
+	public boolean gainBlood(Blood b){
+		if( this.isAlive() && b.isALive() && this.getRectangle().intersects(b.getRectangle())){
+			this.life = 100;
+			b.setALive(false);
+			return true;
+		}
+		return false;
+	}
+	private class BloodBar{
+		public void draw(Graphics g) {
+			Color c = g.getColor();
+			g.setColor(Color.RED);
+			g.drawRect(x, y-10, WIDTH, 10);
+			g.fillRect(x, y-10, WIDTH * life / 100, 10);
+			g.fillOval(x, y, WIDTH, HEIGHT);
+			g.setColor(c);
+		}
 	}
 }
